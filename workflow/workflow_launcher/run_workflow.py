@@ -1,5 +1,5 @@
 """
-投资信息收集器 - 统一工作流启动器
+Daily Info Workflow System - 统一工作流启动器
 =====================================
 功能：
 1. 依次执行四个信息收集脚本
@@ -1106,7 +1106,7 @@ def check_dependencies():
 def main():
     """主函数"""
     parser = argparse.ArgumentParser(
-        description='投资信息收集器 - 统一工作流启动器',
+        description='Daily Info Workflow System - 统一工作流启动器',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
@@ -1219,7 +1219,7 @@ def main():
         print("\n❌ 配置校验失败:")
         for item in config_errors:
             print(f"   - {item}")
-        show_windows_notification("投资信息收集未启动", "配置校验失败，请检查 config.yaml 和凭证文件")
+        show_windows_notification("日常信息工作流未启动", "配置校验失败，请检查 config.yaml 和凭证文件")
         return
 
     if not args.dry_run:
@@ -1267,7 +1267,7 @@ def main():
     
     workflow_start = time.time()
     
-    print_header("投资信息收集器 - 统一工作流启动器")
+    print_header("Daily Info Workflow System - 统一工作流启动器")
     print(f"启动时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Python版本: {sys.version.split()[0]}")
     print(f"工作目录: {PROJECT_ROOT}")
@@ -1423,7 +1423,7 @@ def main():
         print("🎉 所有步骤执行成功！")
         ProgressManager.clear_progress()
         show_windows_notification(
-            "投资信息收集完成",
+            "日常信息工作流完成",
             f"成功执行 {success_count} 个步骤，用时 {workflow_elapsed:.0f} 秒"
         )
     elif success_count > 0:
@@ -1433,7 +1433,7 @@ def main():
         print(f"   - 使用 --status 查看详细状态")
         print(f"   - 查看错误日志: {ERROR_LOG_FILE}")
         show_windows_notification(
-            "投资信息收集部分完成",
+            "日常信息工作流部分完成",
             f"成功 {success_count} 个，失败 {failed_count} 个"
         )
     else:
@@ -1443,7 +1443,7 @@ def main():
         print(f"   - 使用 --status 查看详细状态")
         print(f"   - 检查依赖包: python run_workflow.py --skip-check")
         show_windows_notification(
-            "投资信息收集失败",
+            "日常信息工作流失败",
             f"所有 {len(results)} 个步骤执行失败"
         )
     

@@ -1,6 +1,6 @@
-# My Investment System 2.0
+# Daily Info Workflow System
 
-个人投资信息收集工作流。系统会从 AlphaPai、Notion 微信收藏和 AlphaPai 订阅公众号收集内容，转换为 Markdown，写入 Obsidian，并在可用时生成 AI 标签或 AI 评价。
+日常信息收集工作流。系统会从 AlphaPai、Notion 微信收藏、AlphaPai 订阅公众号和小宇宙播客收集内容，转换为 Markdown，写入 Obsidian，并在可用时生成 AI 标签、AI 评价或播客 AI 要点。
 
 ## 工作流
 

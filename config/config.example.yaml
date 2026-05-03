@@ -28,6 +28,22 @@ alphapai:
 wechat:
   new_account_download_count: 3
   max_download_per_account: 10
+  max_history_per_account: 100
+  history_clean_threshold: 150
+  category_mapping:
+    投资: "1-投资"
+    宏观: "2-宏观"
+    商业: "3-商业"
+    科技: "4-科技"
+    工作: "5-工作"
+    其他: "6-其他"
+  read_subfolders:
+    - "1-投资"
+    - "2-宏观"
+    - "3-商业"
+    - "4-科技"
+    - "5-工作"
+    - "6-其他"
 
 podcast:
   base_dir: "B小宇宙"
@@ -35,8 +51,20 @@ podcast:
   read_folder_name: "已读"
   audio_dir: "data\\podcast\\audio"
   transcript_dir: "data\\podcast\\transcripts"
+  refresh_tingwu_login_each_run: true
   completed_transcript_page_size: 48
+  completed_transcript_max_pages: 0
+  read_article_days: 30
+  auto_login_on_cookie_failure: true
+  auto_login_wait_verification_seconds: 60
   delete_tingwu_record_after_process: true
+  tingwu_list_page_size: 48
+  transcript_chunk_size_chars: 80000
+  ai_single_max_tokens: 12000
+  ai_chunk_max_tokens: 8000
+  ai_synthesis_max_tokens: 12000
+  cleanup_raw_transcripts_after_process: true
+  raw_transcript_retention_days: 7
   max_download_per_account: 5
   new_account_download_count: 3
   accounts: []
@@ -46,11 +74,27 @@ daily_digest:
   unread_folder_name: "未读"
   read_folder_name: "已读"
   max_input_chars: 120000
+  chunk_chars: 80000
   max_tokens: 12000
+  chunk_max_tokens: 7000
+  synthesis_max_tokens: 12000
+
+weekly_digest:
+  max_tokens: 12000
+  chunk_max_tokens: 7000
+  synthesis_max_tokens: 12000
 
 memo:
   new_source_download_count: 10
   max_download_per_source: 20
+  read_subfolders:
+    - "0-Inbox"
+    - "1-转记"
+    - "2-预约会议"
+    - "3-宏观"
+    - "4-策略"
+    - "5-社会服务"
+    - "6-商贸零售"
   tag_configs: []
 
 notion:

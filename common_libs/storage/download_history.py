@@ -1,37 +1,69 @@
 import os
 import json
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
 
 def save_json_atomic(data, file_path):
     """
-    保存 JSON 文件。
+    Atomically save JSON data.
 
-    Windows 环境中部分受保护目录会拒绝 os.replace/os.rename 覆盖已有文件，
-    因此直接覆盖写入；非 Windows 仍使用临时文件 + replace。
+    The temp file is written in the same directory as the target so os.replace
+    stays on the same filesystem. A best-effort .bak copy is kept for recovery
+    if the process is interrupted or the target becomes corrupted.
     """
     path = Path(file_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(data, ensure_ascii=False, indent=2)
+    backup_path = path.with_suffix(path.suffix + ".bak")
 
-    if os.name == "nt":
-        path.write_text(text, encoding="utf-8")
-        return
+    fd, temp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=str(path.parent),
+        text=True,
+    )
+    temp_path = Path(temp_name)
 
-    temp_file = path.with_suffix(path.suffix + ".tmp")
-    temp_file.write_text(text, encoding="utf-8")
-    os.replace(temp_file, path)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+            f.write("\n")
+            f.flush()
+
+        if path.exists():
+            try:
+                backup_path.write_bytes(path.read_bytes())
+            except Exception:
+                pass
+
+        os.replace(temp_path, path)
+    except Exception:
+        try:
+            temp_path.unlink(missing_ok=True)
+        except Exception:
+            pass
+        raise
+
+
+def load_json_with_backup(file_path, default=None):
+    path = Path(file_path)
+    backup_path = path.with_suffix(path.suffix + ".bak")
+    fallback = {} if default is None else default
+
+    for candidate in (path, backup_path):
+        if not candidate.exists():
+            continue
+        try:
+            return json.loads(candidate.read_text(encoding="utf-8"))
+        except Exception as e:
+            print(f"读取 JSON 失败: {candidate}: {e}")
+    return fallback
 
 
 def load_download_history(history_file):
-    if os.path.exists(history_file):
-        try:
-            with open(history_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"读取历史记录失败: {e}")
-    return {}
+    return load_json_with_backup(history_file, default={})
 
 
 def save_download_history(history, history_file):

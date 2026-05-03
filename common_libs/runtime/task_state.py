@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from common_libs.storage.download_history import save_json_atomic
+from common_libs.storage.download_history import load_json_with_backup, save_json_atomic
 from common_libs.utils.paths import PROJECT_ROOT
 
 
@@ -17,14 +16,11 @@ def _now() -> str:
 
 
 def load_task_state() -> dict[str, Any]:
-    if not STATE_FILE.exists():
+    data = load_json_with_backup(STATE_FILE, default={"tasks": {}})
+    if not isinstance(data, dict):
         return {"tasks": {}}
-    try:
-        data = json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        data.setdefault("tasks", {})
-        return data
-    except Exception:
-        return {"tasks": {}}
+    data.setdefault("tasks", {})
+    return data
 
 
 def save_task_state(state: dict[str, Any]) -> None:

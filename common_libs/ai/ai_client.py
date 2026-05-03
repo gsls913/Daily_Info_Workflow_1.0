@@ -26,6 +26,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import requests
 
+from common_libs.storage.download_history import save_json_atomic
+
 
 class AICallType(Enum):
     """AI 调用类型枚举"""
@@ -258,20 +260,10 @@ class AIClient:
         with AIClient._config_lock:
             max_retries = 3
             retry_delay = 0.1
-            config_text = json.dumps(config, ensure_ascii=False, indent=2)
             
             for attempt in range(max_retries):
                 try:
-                    AI_MODELS_CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-                    if os.name == "nt":
-                        with open(AI_MODELS_CONFIG_FILE, "w", encoding="utf-8") as f:
-                            f.write(config_text)
-                        return
-
-                    temp_file = str(AI_MODELS_CONFIG_FILE) + '.tmp'
-                    with open(temp_file, "w", encoding="utf-8") as f:
-                        f.write(config_text)
-                    os.replace(temp_file, AI_MODELS_CONFIG_FILE)
+                    save_json_atomic(config, AI_MODELS_CONFIG_FILE)
                     return
                     
                 except (IOError, OSError) as e:
@@ -282,13 +274,6 @@ class AIClient:
                 except Exception as e:
                     self._log(f"保存 AI 模型配置失败: {e}", "WARN")
                     return
-            
-            temp_file = str(AI_MODELS_CONFIG_FILE) + '.tmp'
-            if os.path.exists(temp_file):
-                try:
-                    os.remove(temp_file)
-                except:
-                    pass
     
     def _get_minimax_model(self) -> str:
         """获取当前配置的 MiniMax 模型"""
