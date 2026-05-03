@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+# Local credentials and login state. Do not share these.
+tongyi_password.txt
+tingwu_profile_state.json
+tingwu_browser_profile/
+tingwu_profile_status.json
+tingwu_last_upload_python.json
+
+# Local outputs
+downloads/
+exports/
+*.docx
+*.png

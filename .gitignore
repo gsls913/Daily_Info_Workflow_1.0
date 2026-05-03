@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Editor, OS, and local environment files
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local machine configuration
+config/config.yaml
+config/mcporter.json
+!config/*.example.*
+
+# Local credentials and tokens
+data/credentials/
+alpha_wechat_downloader/get_*.txt
+tools/**/get_*.txt
+podcast_process/*token*.json
+podcast_process/*password*.txt
+podcast_process/credentials.json
+*.secret.*
+*.local.*
+
+# Runtime state
+data/config/*.json
+data/config/*.xlsx
+!data/config/*.example.json
+data/logs/
+data/podcast/audio/
+data/podcast/transcripts/
+data/reports/
+data/tmp*/
+data/history/*.json
+data/history/*.tmp
+workflow/ai/ai_models.json
+*.tmp
+*.log
+
+# Downloader logs
+alpha_memo_downloader/logs/
+alpha_wechat_downloader/logs/
+notion_wechat_downloader/logs/
+podcast_process/logs/
+common_libs/wechat_downloader/logs/
+tools/**/logs/
+
+# Generated browser/debug artifacts
+podcast_process/*.png
+podcast_process/*.html
+podcast_process/*analysis*.json
+podcast_process/dbg_*.json
+podcast_process/current_state.png
+podcast_process/error.png
+podcast_process/artifacts/
+
+# Local output and Office temp files
+~$*.xlsx
+~$*.docx
+~$*.pptx

@@ -1,0 +1,74 @@
+# Copy this file to config/config.yaml and adjust local paths and accounts.
+# Do not commit config/config.yaml.
+
+paths:
+  obsidian_base_dir: "D:\\path\\to\\Obsidian\\Vault"
+  memo_base_dir: "B会议纪要"
+  wechat_article_base_dir: "B微信文章"
+  attachment_dir: "_overall\\_attachment"
+
+retention:
+  log_days: 30
+  log_max_files_per_dir: 90
+  workflow_error_log_max_kb: 1024
+  report_days: 90
+  report_max_files: 120
+  task_state_days: 120
+  task_state_max_entries: 5000
+  tmp_days: 3
+  memo_read_article_days: 90
+  wechat_read_article_days: 30
+  history_days: 90
+
+alphapai:
+  base_url: "https://alphapai-web.rabyte.cn"
+  page_size: 50
+  max_history_per_key: 100
+
+wechat:
+  new_account_download_count: 3
+  max_download_per_account: 10
+
+podcast:
+  base_dir: "B小宇宙"
+  unread_folder_name: "未读"
+  read_folder_name: "已读"
+  audio_dir: "data\\podcast\\audio"
+  transcript_dir: "data\\podcast\\transcripts"
+  completed_transcript_page_size: 48
+  delete_tingwu_record_after_process: true
+  max_download_per_account: 5
+  new_account_download_count: 3
+  accounts: []
+
+daily_digest:
+  base_dir: "Bz日报周报"
+  unread_folder_name: "未读"
+  read_folder_name: "已读"
+  max_input_chars: 120000
+  max_tokens: 12000
+
+memo:
+  new_source_download_count: 10
+  max_download_per_source: 20
+  tag_configs: []
+
+notion:
+  database_name: "微信收藏"
+  property_downloaded: "是否已下载"
+  value_downloaded: "已下载"
+  property_url: "网址"
+  page_size: 100
+
+safety:
+  dry_run: false
+  allow_local_delete: true
+  allow_cloud_delete: true
+  confirm_destructive_actions: true
+
+ai:
+  default_provider: "minimax"
+  parallel_workers:
+    modelscope: 5
+    huoshan: 20
+    minimax: 10

@@ -1,0 +1,109 @@
+{
+  "last_updated": "1970-01-01",
+  "ai_provider": "minimax",
+  "modelscope_parallel_workers": 5,
+  "huoshan_parallel_workers": 20,
+  "minimax_parallel_workers": 10,
+  "minimax_default_model": "MiniMax-M2.7",
+  "modelscope_models": {},
+  "huoshan_models": {
+    "kimi-k2.5": {
+      "daily_limit": 999999,
+      "daily_remaining": 999999,
+      "daily_used": 0,
+      "total_calls": 0,
+      "calls_by_type": {
+        "tag_judgment": 0,
+        "short_text": 0,
+        "long_thinking": 0
+      },
+      "success_by_type": {
+        "tag_judgment": 0,
+        "short_text": 0,
+        "long_thinking": 0
+      },
+      "avg_duration_today": null,
+      "avg_duration_total": null,
+      "total_duration_ms": 0,
+      "successful_calls": 0,
+      "last_success_at": null,
+      "error_counts": {
+        "rate_limit": 0,
+        "timeout": 0,
+        "empty_response": 0,
+        "other": 0
+      },
+      "consecutive_rate_limit_count": 0,
+      "last_call_time": null
+    }
+  },
+  "minimax_models": {
+    "MiniMax-M2.7": {
+      "daily_limit": 999999,
+      "daily_remaining": 999999,
+      "daily_used": 0,
+      "total_calls": 0,
+      "calls_by_type": {
+        "tag_judgment": 0,
+        "short_text": 0,
+        "long_thinking": 0
+      },
+      "success_by_type": {
+        "tag_judgment": 0,
+        "short_text": 0,
+        "long_thinking": 0
+      },
+      "avg_duration_today": null,
+      "avg_duration_total": null,
+      "total_duration_ms": 0,
+      "successful_calls": 0,
+      "last_success_at": null,
+      "error_counts": {
+        "rate_limit": 0,
+        "timeout": 0,
+        "empty_response": 0,
+        "other": 0,
+        "validation_failed": 0
+      },
+      "consecutive_rate_limit_count": 0,
+      "last_call_time": null
+    }
+  },
+  "modelscope_model_order": {
+    "tag_judgment": [],
+    "short_text": [],
+    "long_thinking": []
+  },
+  "default_params": {
+    "tag_judgment": {
+      "temperature": 0.1,
+      "max_tokens": 64
+    },
+    "short_text": {
+      "temperature": 0.2,
+      "max_tokens": 128
+    },
+    "long_thinking": {
+      "temperature": 0.6,
+      "max_tokens": 4096
+    }
+  },
+  "modelscope_api_config": {
+    "base_url": "https://api-inference.modelscope.cn/v1",
+    "timeout_seconds": 240,
+    "max_retries": 3,
+    "retry_delay_seconds": 10
+  },
+  "huoshan_api_config": {
+    "base_url": "https://ark.cn-beijing.volces.com/api/coding/v3",
+    "timeout_seconds": 240,
+    "max_retries": 3,
+    "retry_delay_seconds": 10
+  },
+  "minimax_api_config": {
+    "base_url": "https://api.minimaxi.com/v1",
+    "timeout_seconds": 240,
+    "max_retries": 3,
+    "retry_delay_seconds": 10
+  }
+}
