@@ -69,6 +69,7 @@ podcast:
   ai_synthesis_max_tokens: 12000
   cleanup_raw_transcripts_after_process: true
   raw_transcript_retention_days: 7
+  audio_retention_days: 10
   max_download_per_account: 5
   new_account_download_count: 3
   # 小宇宙播客账号已迁移到 data/config/set_config.xlsx 的 podcast_account sheet。

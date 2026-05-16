@@ -147,6 +147,7 @@ MiniMax 官方文档列出的 M2.7 输入输出总 token/context window 为 2048
 - `wechat.max_download_per_account`: 已有历史记录的公众号，本轮最多下载数量。
 - `podcast.new_account_download_count`: 新小宇宙账号首次上传节目数量。
 - `podcast.max_download_per_account`: 已有历史记录的小宇宙账号，本轮最多上传节目数量。
+- `podcast.audio_retention_days`: 本地已下载音频在 `data/podcast/audio` 下的保留天数。
 - `memo.new_source_download_count`: 新纪要来源首次下载数量。
 - `memo.max_download_per_source`: 已有历史记录的纪要来源，本轮最多下载数量。
 - Notion 微信收藏默认不限制下载数量，会处理当前数据库中所有待下载项。

@@ -82,6 +82,7 @@ NEW_ACCOUNT_DOWNLOAD_COUNT = cfg("podcast.new_account_download_count", 3)
 MAX_DOWNLOAD_PER_ACCOUNT = cfg("podcast.max_download_per_account", 5)
 READ_RETENTION_DAYS = cfg("podcast.read_article_days", cfg("retention.wechat_read_article_days", 30))
 RAW_TRANSCRIPT_RETENTION_DAYS = cfg("podcast.raw_transcript_retention_days", 7)
+AUDIO_RETENTION_DAYS = cfg("podcast.audio_retention_days", 10)
 CLEANUP_RAW_TRANSCRIPTS_AFTER_PROCESS = cfg("podcast.cleanup_raw_transcripts_after_process", True)
 AUTO_LOGIN_ON_COOKIE_FAILURE = cfg("podcast.auto_login_on_cookie_failure", True)
 AUTO_LOGIN_WAIT_VERIFICATION_SECONDS = cfg("podcast.auto_login_wait_verification_seconds", 60)
@@ -95,6 +96,7 @@ TRANSCRIPT_CHUNK_SIZE_CHARS = cfg("podcast.transcript_chunk_size_chars", 80000)
 AI_SINGLE_MAX_TOKENS = cfg("podcast.ai_single_max_tokens", 12000)
 AI_CHUNK_MAX_TOKENS = cfg("podcast.ai_chunk_max_tokens", 8000)
 AI_SYNTHESIS_MAX_TOKENS = cfg("podcast.ai_synthesis_max_tokens", 12000)
+AUDIO_FILE_SUFFIXES = (".mp3", ".wav", ".m4a", ".wma", ".aac", ".ogg", ".amr", ".flac", ".aiff")
 
 HEADERS_FOR_AUDIO = {
     "User-Agent": (
@@ -154,19 +156,25 @@ def ensure_dirs() -> None:
         path.mkdir(parents=True, exist_ok=True)
 
 
-def clean_old_files(directory: Path, days_threshold: int, suffixes: tuple[str, ...] | None = None) -> int:
+def clean_old_files(
+    directory: Path,
+    days_threshold: int,
+    suffixes: tuple[str, ...] | None = None,
+    timestamp_getter: Any | None = None,
+) -> int:
     if days_threshold < 0 or not directory.exists():
         return 0
     now = time.time()
     cutoff_seconds = days_threshold * 24 * 3600
     deleted = 0
+    timestamp_getter = timestamp_getter or (lambda path: path.stat().st_mtime)
     for path in directory.iterdir():
         if not path.is_file():
             continue
         if suffixes and path.suffix.lower() not in suffixes:
             continue
         try:
-            if now - path.stat().st_mtime > cutoff_seconds:
+            if now - timestamp_getter(path) > cutoff_seconds:
                 path.unlink()
                 deleted += 1
                 log_info(f"已清理过期运行文件: {path}")
@@ -176,9 +184,18 @@ def clean_old_files(directory: Path, days_threshold: int, suffixes: tuple[str, .
 
 
 def clean_old_podcast_runtime_files() -> int:
+    if not ALLOW_LOCAL_DELETE:
+        log_info("安全开关禁止本地删除，跳过播客运行文件清理")
+        return 0
     deleted = 0
     deleted += clean_old_files(RAW_DOCX_DIR, RAW_TRANSCRIPT_RETENTION_DAYS, (".docx",))
     deleted += clean_old_files(RAW_TEXT_DIR, RAW_TRANSCRIPT_RETENTION_DAYS, (".txt",))
+    deleted += clean_old_files(
+        PODCAST_AUDIO_DIR,
+        AUDIO_RETENTION_DAYS,
+        AUDIO_FILE_SUFFIXES,
+        timestamp_getter=lambda path: path.stat().st_ctime,
+    )
     return deleted
 
 

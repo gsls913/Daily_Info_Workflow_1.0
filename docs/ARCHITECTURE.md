@@ -52,6 +52,8 @@ Tingwu completed-transcript scans use paginated `getTransList` calls. The config
 
 Raw exported podcast transcript files under `data/podcast/transcripts/docx` and `data/podcast/transcripts/txt` are runtime artifacts. After a note is generated successfully, the workflow deletes the corresponding docx/txt by default and also cleans older raw transcript files according to `podcast.raw_transcript_retention_days`.
 
+Local podcast audio files under `data/podcast/audio` are also runtime artifacts. When local deletion is allowed, the podcast workflow removes audio files older than `podcast.audio_retention_days`, using file creation time so recently reprocessed files are not kept indefinitely by metadata-only touches.
+
 ## Main Safety Rules
 
 - Do not mark a Notion article downloaded until it has either succeeded or has been intentionally skipped.

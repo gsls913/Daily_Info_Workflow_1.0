@@ -280,6 +280,7 @@ data/config/set_config.xlsx
 - `ai_single_max_tokens` / `ai_chunk_max_tokens` / `ai_synthesis_max_tokens`: 播客 AI 整理输出长度上限。
 - `cleanup_raw_transcripts_after_process`: 成功生成 Markdown 后是否删除导出的 docx/txt 原始转录文件。
 - `raw_transcript_retention_days`: 清理历史原始转录文件的保留天数。
+- `audio_retention_days`: 每次运行按创建时间清理 `data/podcast/audio` 下超过该天数的本地音频文件，默认 10 天。
 
 播客笔记输出到：
 

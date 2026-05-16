@@ -1,3 +1,36 @@
+import time
+
+
+def test_clean_old_files_uses_custom_timestamp_getter(tmp_path):
+    from investment_system.collectors.podcast import podcast_workflow
+
+    old_audio = tmp_path / "old.m4a"
+    fresh_audio = tmp_path / "fresh.m4a"
+    old_note = tmp_path / "old.txt"
+    old_audio.write_bytes(b"audio")
+    fresh_audio.write_bytes(b"audio")
+    old_note.write_text("not audio", encoding="utf-8")
+
+    now = time.time()
+    timestamps = {
+        old_audio: now - 11 * 24 * 3600,
+        fresh_audio: now - 2 * 24 * 3600,
+        old_note: now - 11 * 24 * 3600,
+    }
+
+    deleted = podcast_workflow.clean_old_files(
+        tmp_path,
+        10,
+        (".m4a",),
+        timestamp_getter=lambda path: timestamps[path],
+    )
+
+    assert deleted == 1
+    assert not old_audio.exists()
+    assert fresh_audio.exists()
+    assert old_note.exists()
+
+
 def test_process_completed_transcripts_respects_max_items(monkeypatch):
     from investment_system.collectors.podcast import podcast_workflow
 
