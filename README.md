@@ -1,6 +1,6 @@
 # Daily Info Workflow System
 
-日常信息收集工作流。系统会从 AlphaPai、Notion 微信收藏、Notion 链接收藏、AlphaPai 订阅公众号和小宇宙播客收集内容，转换为 Markdown 或链接表格，写入 Obsidian，并在可用时生成 AI 标签、AI 评价或播客 AI 要点。
+个人投资信息收集工作流。系统会从 AlphaPai、Notion 微信收藏、Notion 链接收藏、AlphaPai 订阅公众号和小宇宙播客收集内容，转换为 Markdown 或链接表格，写入 Obsidian，并在可用时生成 AI 标签、AI 评价或播客 AI 要点。
 
 这个项目面向个人本地运行，不是托管式 Web 服务。它默认会读写本机 Obsidian 仓库、Notion 数据库、AlphaPai 登录信息、通义听悟登录态和本地运行历史，因此正式使用前需要先完成本地配置，并确认 `.gitignore` 中的凭证与运行产物规则仍然生效。
 
