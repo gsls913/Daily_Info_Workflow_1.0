@@ -1,19 +1,9 @@
-# Create desktop shortcut for AlphaPai downloader
-$WshShell = New-Object -ComObject WScript.Shell
-$Desktop = [Environment]::GetFolderPath("Desktop")
-
-# Get current directory (alpha_memo_downloader folder)
-$CurrentDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$BatchFile = Join-Path $CurrentDir "run_alphapai.bat"
-
-# Create shortcut
-$Shortcut = $WshShell.CreateShortcut("$Desktop\AlphaPai Meeting Downloader.lnk")
-$Shortcut.TargetPath = $BatchFile
-$Shortcut.WorkingDirectory = $CurrentDir
-$Shortcut.IconLocation = "$env:SystemRoot\system32\shell32.dll,14"
-$Shortcut.Description = "AlphaPai Meeting Minutes Downloader"
-$Shortcut.Save()
-
-Write-Host "Desktop shortcut created successfully!" -ForegroundColor Green
-Write-Host "Shortcut name: AlphaPai Meeting Downloader" -ForegroundColor Yellow
-Write-Host "Location: Desktop" -ForegroundColor Yellow
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$target = Join-Path $scriptDir "run_alphapai.bat"
+$desktop = [Environment]::GetFolderPath("Desktop")
+$shortcutPath = Join-Path $desktop "AlphaPai会议纪要下载.lnk"
+$shell = New-Object -ComObject WScript.Shell
+$shortcut = $shell.CreateShortcut($shortcutPath)
+$shortcut.TargetPath = $target
+$shortcut.WorkingDirectory = Split-Path -Parent $target
+$shortcut.Save()

@@ -5,19 +5,26 @@
 The project is a local workflow-oriented system rather than a web service. The launcher runs independent collectors in sequence and each collector writes Markdown files into an Obsidian vault.
 
 ```text
-workflow_launcher
-  -> alpha_memo_downloader
-  -> notion_wechat_downloader
-  -> alpha_wechat_downloader
-  -> podcast_process/podcast_workflow.py
+investment_system/launcher
+  -> investment_system/collectors/alpha_memo
+  -> investment_system/collectors/notion
+  -> investment_system/collectors/alpha_wechat
+  -> investment_system/collectors/podcast/podcast_workflow.py
 
-common_libs
+investment_system/common
   -> config, paths, auth, history, article lifecycle, AI, notifications
 ```
 
+The real implementation now lives under `investment_system/`. Legacy top-level directories are thin compatibility wrappers for existing scripts, shortcuts, and imports.
+
+- `investment_system/launcher/launcher_ui.py`: terminal panels, menus, prompts, and width-aware rendering.
+- `investment_system/launcher/workflow_steps.py`: the five top-level workflow step definitions.
+- `investment_system/common/runtime/task_result.py`: normalized task result shape used by the launcher and reports.
+- `investment_system/common/runtime/recycle_bin.py`: local recycle-bin handling for Markdown and image deletes.
+
 ## Shared Layer
 
-`common_libs` is the source of truth for reusable logic. New shared code should be added there first. `workflow.ai` remains only as a compatibility package that forwards imports to `common_libs.ai`.
+`investment_system/common` is the source of truth for reusable logic. New shared code should be added there first. `common_libs` and `workflow.ai` remain only as compatibility packages that forward old imports to the new package layout.
 
 ## State And Recovery
 
@@ -28,6 +35,8 @@ Runtime state is stored under `data/`:
 - `data/logs/workflow_progress.json`: launcher step state.
 - `data/logs/workflow_errors.log`: launcher diagnostics.
 - `data/reports/daily_run_*.md`: one run summary per launcher execution.
+
+AI runtime configuration is stored in `data/config/ai_models.json`. `config/config.yaml` still holds general workflow settings, but the active provider/model/API/runtime parameters are read from the JSON AI config.
 
 The launcher records a step as `running` before starting its subprocess. If the process is interrupted, `--resume` treats that step as resumable and retries it.
 
@@ -49,3 +58,5 @@ Raw exported podcast transcript files under `data/podcast/transcripts/docx` and 
 - Write JSON state through a temporary file and `os.replace`.
 - Keep credentials outside version control.
 - Keep experimental browser automation isolated from the main workflow until it is stable.
+- User-facing Markdown and image deletes should go through the local recycle bin, not permanent deletion. Runtime logs, temp files, and bounded state cleanup may still be deleted according to retention rules.
+- AI responses should pass through the shared AI client / quality layer so hidden thinking tags are stripped before downstream use.

@@ -1,5 +1,3 @@
 @echo off
-chcp 65001 >nul
-cd /d "%~dp0"
-python run_workflow.py %*
-pause
+cd /d "%~dp0..\.."
+py -m investment_system.launcher.run_workflow %*

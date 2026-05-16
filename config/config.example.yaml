@@ -3,8 +3,11 @@
 
 paths:
   obsidian_base_dir: "D:\\path\\to\\Obsidian\\Vault"
-  memo_base_dir: "B会议纪要"
-  wechat_article_base_dir: "B微信文章"
+  investment_notes_base_dir: "D:\\path\\to\\Obsidian\\InvestmentNotes"
+  obsidian_exe_path: "D:\\softwares\\Obsidian\\Obsidian.exe"
+  obsidian_shortcut_staging_dir: "D:\\桌面文件\\系列功能动作\\Obsidian笔记\\新增待添加到utools"
+  memo_base_dir: "C会议纪要"
+  wechat_article_base_dir: "C微信文章"
   attachment_dir: "_overall\\_attachment"
 
 retention:
@@ -46,7 +49,7 @@ wechat:
     - "6-其他"
 
 podcast:
-  base_dir: "B小宇宙"
+  base_dir: "C小宇宙"
   unread_folder_name: "未读"
   read_folder_name: "已读"
   audio_dir: "data\\podcast\\audio"
@@ -54,6 +57,7 @@ podcast:
   refresh_tingwu_login_each_run: true
   completed_transcript_page_size: 48
   completed_transcript_max_pages: 0
+  max_completed_transcripts_per_run: 5
   read_article_days: 30
   auto_login_on_cookie_failure: true
   auto_login_wait_verification_seconds: 60
@@ -67,10 +71,11 @@ podcast:
   raw_transcript_retention_days: 7
   max_download_per_account: 5
   new_account_download_count: 3
-  accounts: []
+  # 小宇宙播客账号已迁移到 data/config/set_config.xlsx 的 podcast_account sheet。
+  # 这里保留运行参数，不再用 podcast.accounts 作为账号来源。
 
 daily_digest:
-  base_dir: "Bz日报周报"
+  base_dir: "Cz日报周报"
   unread_folder_name: "未读"
   read_folder_name: "已读"
   max_input_chars: 120000
@@ -102,6 +107,21 @@ notion:
   property_downloaded: "是否已下载"
   value_downloaded: "已下载"
   property_url: "网址"
+  property_title: "标题"
+  page_size: 100
+
+notion_link_collection:
+  database_name: "网页收藏（仅存链接）"
+  database_alias: "文章收藏（仅存链接）"
+  property_stored: "是否已存到本地"
+  value_stored: "已存到本地"
+  value_failed: "3次存到本地失败"
+  property_failure_count: "存本地失败次数"
+  max_store_failures: 3
+  property_url: "网址"
+  property_title: "标题"
+  output_dir: "B综合\\收藏文章"
+  output_filename: "收藏文章合集.md"
   page_size: 100
 
 safety:
@@ -109,9 +129,11 @@ safety:
   allow_local_delete: true
   allow_cloud_delete: true
   confirm_destructive_actions: true
+  recycle_bin_dir: "D:\\softwares\\Obsidian\\MyNotes\\信息收集器\\_overall\\_recycle_bin"
+  recycle_bin_retention_days: 10
 
 ai:
-  default_provider: "minimax"
+  default_provider: "zhongxin"
   parallel_workers:
     modelscope: 5
     huoshan: 20

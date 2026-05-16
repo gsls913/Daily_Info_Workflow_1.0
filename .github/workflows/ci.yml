@@ -21,7 +21,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Compile Python files
-        run: python -m compileall -q .
+        run: python -m compileall -q investment_system workflow alpha_memo_downloader alpha_wechat_downloader notion_wechat_downloader podcast_process micro_programs common_libs
 
       - name: Run tests
         run: pytest -q

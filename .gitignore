@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *.pyo
 .pytest_cache/
+pytest-cache-files-*/
+.codex_pytest_tmp_*/
 .mypy_cache/
 .ruff_cache/
 .venv/
@@ -25,10 +27,14 @@ config/mcporter.json
 # Local credentials and tokens
 data/credentials/
 alpha_wechat_downloader/get_*.txt
+investment_system/collectors/alpha_wechat/get_*.txt
 tools/**/get_*.txt
 podcast_process/*token*.json
 podcast_process/*password*.txt
 podcast_process/credentials.json
+investment_system/collectors/podcast/*token*.json
+investment_system/collectors/podcast/*password*.txt
+investment_system/collectors/podcast/credentials.json
 *.secret.*
 *.local.*
 
@@ -41,11 +47,15 @@ data/podcast/audio/
 data/podcast/transcripts/
 data/reports/
 data/tmp*/
+data/manual_*/
 data/history/*.json
 data/history/*.tmp
 workflow/ai/ai_models.json
+investment_system/workflow_ai/ai_models.json
+*.pyc.*
 *.tmp
 *.log
+*.bak
 
 # Downloader logs
 alpha_memo_downloader/logs/
@@ -53,6 +63,11 @@ alpha_wechat_downloader/logs/
 notion_wechat_downloader/logs/
 podcast_process/logs/
 common_libs/wechat_downloader/logs/
+investment_system/common/wechat_downloader/logs/
+investment_system/collectors/alpha_memo/logs/
+investment_system/collectors/alpha_wechat/logs/
+investment_system/collectors/notion/logs/
+investment_system/collectors/podcast/logs/
 tools/**/logs/
 
 # Generated browser/debug artifacts
@@ -63,6 +78,21 @@ podcast_process/dbg_*.json
 podcast_process/current_state.png
 podcast_process/error.png
 podcast_process/artifacts/
+podcast_process/tingwu_python_workflow/tingwu_browser_profile/
+podcast_process/tingwu_python_workflow/tingwu_profile_state.json
+podcast_process/tingwu_python_workflow/tingwu_profile_status.json
+podcast_process/tingwu_python_workflow/tingwu_last_upload_python.json
+investment_system/collectors/podcast/*.png
+investment_system/collectors/podcast/*.html
+investment_system/collectors/podcast/*analysis*.json
+investment_system/collectors/podcast/dbg_*.json
+investment_system/collectors/podcast/current_state.png
+investment_system/collectors/podcast/error.png
+investment_system/collectors/podcast/artifacts/
+investment_system/collectors/podcast/tingwu_python_workflow/tingwu_browser_profile/
+investment_system/collectors/podcast/tingwu_python_workflow/tingwu_profile_state.json
+investment_system/collectors/podcast/tingwu_python_workflow/tingwu_profile_status.json
+investment_system/collectors/podcast/tingwu_python_workflow/tingwu_last_upload_python.json
 
 # Local output and Office temp files
 ~$*.xlsx

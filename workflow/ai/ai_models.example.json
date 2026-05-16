@@ -1,3 +1,3 @@
 {
-  "see": "../../data/config/ai_models.example.json"
+  "note": "Compatibility placeholder. Active AI runtime config lives in data/config/ai_models.json; the checked-in example lives in data/config/ai_models.example.json."
 }

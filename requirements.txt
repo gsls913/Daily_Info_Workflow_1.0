@@ -1,4 +1,5 @@
 beautifulsoup4>=4.12
+html2text>=2025.4.15
 notion-client>=2.2
 openpyxl>=3.1
 Pillow>=10.0

@@ -8,6 +8,8 @@
 python workflow\workflow_launcher\run_workflow.py
 ```
 
+`workflow\workflow_launcher\run_workflow.py` 是兼容入口；真实实现位于 `investment_system\launcher\run_workflow.py`。新代码和新引用应使用 `investment_system` 包。
+
 非交互式运行：
 
 ```powershell
@@ -34,6 +36,8 @@ python workflow\workflow_launcher\run_workflow.py --dry-run
 - `data/config/ai_models.json`
 - MiniMax 或当前 AI 服务的套餐、余额、token plan、限流状态
 
+如果当前 provider 是 `zhongxin`，预检失败提示里会额外提醒检查 VPN。中信 AI 在开启 VPN 时可能无法访问；关闭 VPN 后重试通常是第一步排查。
+
 ## 每日运行摘要
 
 每次正式运行或 dry-run 都会生成摘要：
@@ -55,7 +59,7 @@ data/reports/daily_run_YYYYMMDD_HHMMSS.md
 
 ## 信息汇总日报
 
-正式完整运行时，启动器会在程序开始阶段判断当天是否第一次完整运行。如果是，四条工作流执行完毕并生成运行摘要后，会触发信息汇总日报。
+正式完整运行时，启动器会在程序开始阶段判断当天是否第一次完整运行。如果是，五条采集工作流执行完毕并生成运行摘要后，会触发信息汇总日报。
 
 日报生成逻辑：
 
@@ -89,7 +93,7 @@ MiniMax 官方文档列出的 M2.7 输入输出总 token/context window 为 2048
 
 ## 信息汇总周报
 
-正式完整运行时，启动器也会在程序开始阶段判断本周是否第一次完整运行。如果是，四条工作流执行完毕、日报流程结束后，会触发信息汇总周报。
+正式完整运行时，启动器也会在程序开始阶段判断本周是否第一次完整运行。如果是，五条采集工作流执行完毕、日报流程结束后，会触发信息汇总周报。
 
 周报生成逻辑：
 
@@ -147,6 +151,16 @@ MiniMax 官方文档列出的 M2.7 输入输出总 token/context window 为 2048
 - `memo.max_download_per_source`: 已有历史记录的纪要来源，本轮最多下载数量。
 - Notion 微信收藏默认不限制下载数量，会处理当前数据库中所有待下载项。
 
+## 来源与标签配置
+
+公众号、小宇宙播客账号和 AI 标签候选项统一维护在 `data/config/set_config.xlsx`：
+
+- `wechat_account`: 公众号名称、简称、分类、单篇/聚合。
+- `podcast_account`: 播客名称、url、简称。
+- `memo_tag_options`: 公司、行业。
+
+可以从启动器进入 `配置与状态 -> 管理来源与标签配置` 增删这些条目。小宇宙账号不再以 `config/config.yaml` 的 `podcast.accounts` 为运行来源；如果 Excel 中缺少 `podcast_account` sheet，系统会从旧 YAML 配置自动创建一次。
+
 ## 安全开关
 
 `config/config.yaml` 的 `safety` 控制危险操作：
@@ -155,6 +169,38 @@ MiniMax 官方文档列出的 M2.7 输入输出总 token/context window 为 2048
 - `allow_local_delete`: 是否允许删除本地运行产物，例如旧原始转录文件、过期已读笔记。
 - `allow_cloud_delete`: 是否允许删除云端记录，例如听悟 `delTrans`。
 - `confirm_destructive_actions`: 交互式主程序是否展示危险操作提醒。
+- `recycle_bin_dir`: 本地 Markdown 和图片删除前移入的回收站目录，默认在 Obsidian `信息收集器\_overall\_recycle_bin` 下。
+- `recycle_bin_retention_days`: 回收站保留天数，默认 10 天；超过后由启动器维护清理彻底删除。
+
+日志、每日运行摘要、临时文件和任务状态属于运行产物，仍按 `retention` 直接清理。Markdown 正文和图片附件这类用户内容会优先移入本地回收站。
+
+## 实用微程序
+
+主界面选择 `实用微程序` 后，可运行独立小工具，不启动完整信息流。
+
+- 有道云文档链接转 Markdown：支持一次输入多个有道云分享链接。
+- AlphaPai 纪要链接转 Markdown：支持一次输入多个 AlphaPai 详情链接，保存到会议纪要 Inbox，并复用批量下载流程生成 Markdown、标签和 AI 评价。
+
+AlphaPai 链接微程序支持：
+
+```text
+https://alphapai-web.rabyte.cn/reading/self-summary-detail?id=...
+https://alphapai-web.rabyte.cn/reading/home/meeting/detail?articleId=...
+```
+
+如果 Markdown 已存在但还没有 `# AI 评价`，再次运行同一链接会尝试补充 AI 标签和评价。
+
+## AI 配置
+
+AI 实际生效配置在：
+
+```text
+data/config/ai_models.json
+```
+
+可在主界面进入 `其他操作 -> 更改 AI API / 模型配置` 调整 provider、模型、并发、API 地址、超时/重试和 `tag_judgment`、`short_text`、`long_thinking` 三类场景参数。
+
+AI 客户端会在统一出口清理 `<think>...</think>` 和 `<thinking>...</thinking>`，这些模型思考内容不会写入本地 Markdown、日报、周报或 AI 评价。
 
 ## 任务状态
 

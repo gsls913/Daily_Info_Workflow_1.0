@@ -1,0 +1,1 @@
+"""AlphaPai WeChat article collector."""
