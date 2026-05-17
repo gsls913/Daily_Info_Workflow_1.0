@@ -5,8 +5,6 @@ import shutil
 import sys
 import unicodedata
 import re
-if os.name == "nt":
-    import msvcrt
 
 
 UI_DEFAULT_WIDTH = 96
@@ -125,34 +123,8 @@ def print_rule(width: int | None = None):
     print(style("─" * width))
 
 
-def _rerender_input_line(prompt: str, value: str):
-    print("\r\033[K" + prompt + value, end="", flush=True)
-
-
 def _readline_windows(label: str) -> str:
-    prompt = style("› ") + label
-    chars: list[str] = []
-    print(prompt, end="", flush=True)
-    while True:
-        char = msvcrt.getwch()
-        if char in ("\x00", "\xe0"):
-            msvcrt.getwch()
-            continue
-        if char == "\x03":
-            raise KeyboardInterrupt
-        if char in ("\r", "\n"):
-            print()
-            return "".join(chars).strip()
-        if char == "\x08":
-            if chars:
-                chars.pop()
-                _rerender_input_line(prompt, "".join(chars))
-            continue
-        if char == "\x1b":
-            continue
-        if char and char.isprintable():
-            chars.append(char)
-            _rerender_input_line(prompt, "".join(chars))
+    return input(style("› ") + label).strip()
 
 
 def ui_prompt(label: str) -> str:
