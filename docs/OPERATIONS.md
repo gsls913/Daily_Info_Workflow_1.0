@@ -181,6 +181,7 @@ MiniMax 官方文档列出的 M2.7 输入输出总 token/context window 为 2048
 
 - 有道云文档链接转 Markdown：支持一次输入多个有道云分享链接。
 - AlphaPai 纪要链接转 Markdown：支持一次输入多个 AlphaPai 详情链接，保存到会议纪要 Inbox，并复用批量下载流程生成 Markdown、标签和 AI 评价。
+- 本地文档转 Markdown：支持一次输入多个本地 `.docx`、`.doc`、`.pdf`、`.txt` 路径，保存到会议纪要 Inbox。`.docx/.doc` 会尽量保留标题、列表缩进、加粗、斜体、删除线、文字颜色和表格；`.pdf/.txt` 会提取文字并套用同一模板。
 
 AlphaPai 链接微程序支持：
 

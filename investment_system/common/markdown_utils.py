@@ -6,6 +6,74 @@ import re
 from collections.abc import Iterable
 
 
+def merge_adjacent_bold_spans(markdown: str) -> str:
+    """Merge immediately adjacent Markdown bold spans.
+
+    Word conversion can produce fragments like ``**Q** **：**`` or
+    ``**文本1****文本2**``. Obsidian renders these poorly, so collapse the
+    redundant close/open marker pair while preserving any spaces between them.
+    """
+    if not markdown:
+        return markdown
+    previous = None
+    fixed = markdown
+    while previous != fixed:
+        previous = fixed
+        fixed = re.sub(r"(?<=\S)\*\*([ \t]*)\*\*(?=\S)", r"\1", fixed)
+    return fixed
+
+
+def _is_punctuation_or_space(char: str) -> bool:
+    import unicodedata
+
+    if not char:
+        return False
+    return char.isspace() or char == "_" or unicodedata.category(char).startswith(("P", "Z"))
+
+
+def fix_bold_span_boundary_spacing(markdown: str) -> str:
+    """Add spaces around bold markers when boundary chars need it.
+
+    The parser walks pairs of ``**`` markers in order. When the wrapped text
+    starts with punctuation/space, the opening marker should be separated from
+    preceding text. When the wrapped text ends with punctuation/space, the
+    closing marker should be separated from following text.
+    """
+    if not markdown:
+        return markdown
+
+    result: list[str] = []
+    cursor = 0
+    length = len(markdown)
+
+    while cursor < length:
+        open_index = markdown.find("**", cursor)
+        if open_index == -1:
+            result.append(markdown[cursor:])
+            break
+
+        close_index = markdown.find("**", open_index + 2)
+        if close_index == -1:
+            result.append(markdown[cursor:])
+            break
+
+        result.append(markdown[cursor:open_index])
+        span_text = markdown[open_index + 2 : close_index]
+        if span_text and _is_punctuation_or_space(span_text[0]) and result:
+            previous_char = result[-1][-1] if result[-1] else ""
+            if previous_char and not previous_char.isspace():
+                result.append(" ")
+
+        result.append(markdown[open_index : close_index + 2])
+        cursor = close_index + 2
+
+        next_char = markdown[cursor] if cursor < length else ""
+        if span_text and _is_punctuation_or_space(span_text[-1]) and next_char and not next_char.isspace():
+            result.append(" ")
+
+    return "".join(result)
+
+
 def fix_paragraph_initial_bold_spacing(markdown: str) -> str:
     """Add a space after paragraph-initial bold spans when content follows.
 
@@ -101,5 +169,8 @@ def format_metadata_datetime(value: object) -> str:
 
 def normalize_markdown_output(markdown: str) -> str:
     """Apply safe project-wide Markdown output normalizations."""
-    return fix_paragraph_initial_bold_spacing(markdown)
+    fixed = merge_adjacent_bold_spans(markdown)
+    fixed = fix_bold_span_boundary_spacing(fixed)
+    fixed = fix_paragraph_initial_bold_spacing(fixed)
+    return fixed
 

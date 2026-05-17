@@ -31,7 +31,7 @@ python workflow\workflow_launcher\run_workflow.py
 主界面还提供两个工具入口：
 
 - `其他操作`: 清除历史记录、删除上次下载内容、单独下载来源、查看运行摘要、修改程序参数、修改 AI API / 模型配置等。
-- `实用微程序`: 独立小工具，不启动完整工作流。当前包含有道云文档转 Markdown、AlphaPai 纪要链接转 Markdown。
+- `实用微程序`: 独立小工具，不启动完整工作流。当前包含有道云文档转 Markdown、AlphaPai 纪要链接转 Markdown、本地文档转 Markdown。
 
 执行顺序：
 

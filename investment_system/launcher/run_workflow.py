@@ -899,23 +899,26 @@ def show_download_convert_menu():
                 ("1", "单独下载特定账号下内容", "下载单家公司纪要、单个公众号或单个小宇宙播客。"),
                 ("2", "有道云文档链接转为 Markdown 文档", "输入一个或多个有道云分享链接，保存到会议纪要 Inbox。"),
                 ("3", "AlphaPai 纪要链接转为 Markdown 文档", "输入一个或多个 AlphaPai 纪要详情链接，保存到会议纪要 Inbox，并生成 AI 评价。"),
+                ("4", "本地文档转为 Markdown 文档", "输入一个或多个本地 docx/doc/pdf/txt 文件路径，保存到会议纪要 Inbox。"),
                 ("0", "返回主菜单", None),
             ],
             subtitle="不启动完整工作流，只处理你指定的内容。",
             notes=["统一规则：0 返回，Ctrl+C 取消当前操作。"],
         )
         try:
-            choice = ui_prompt("选择 0-3: ")
+            choice = ui_prompt("选择 0-4: ")
             if choice == "1":
                 run_single_source_download_menu()
             elif choice == "2":
                 run_youdao_note_to_md()
             elif choice == "3":
                 run_alphapai_links_to_md()
+            elif choice == "4":
+                run_local_document_to_md()
             elif choice == "0":
                 return
             else:
-                ui_error("无效选项，请输入 0、1、2 或 3")
+                ui_error("无效选项，请输入 0、1、2、3 或 4")
         except KeyboardInterrupt:
             print()
             ui_success("返回主菜单")
@@ -1683,6 +1686,55 @@ def run_alphapai_links_to_md():
         PROJECT_ROOT,
         task_label="AlphaPai 链接转 Markdown 微程序",
     )
+
+
+def run_local_document_to_md():
+    ui_panel(
+        "主菜单 > 单独下载与转换 > 本地文档转 Markdown",
+        [
+            "请输入一个或多个本地 docx/doc/pdf/txt 文件路径。",
+            "支持每行一个路径；也可以一次粘贴多行。输入空行结束。",
+            "docx/doc 会尽量保留标题、列表缩进、加粗、斜体、删除线、文字颜色和表格；pdf/txt 会提取文字并套用同一模板。",
+        ],
+    )
+    lines = []
+    while True:
+        raw = ui_prompt("文档路径（空行结束）: ")
+        if not raw:
+            break
+        lines.append(raw)
+    from investment_system.micro_programs.word_doc_to_md import parse_document_path_inputs
+
+    paths = parse_document_path_inputs(lines)
+    if not paths:
+        ui_error("没有解析到有效 docx/doc/pdf/txt 文件路径")
+        return
+
+    output_dir = os.path.join(MEMO_BASE_DIR, "0-Inbox")
+    script_path = os.path.join(PROJECT_ROOT, "investment_system", "micro_programs", "word_doc_to_md.py")
+    cmd = [
+        sys.executable,
+        script_path,
+        *[str(path) for path in paths],
+        "--out-dir",
+        output_dir,
+    ]
+    confirm_and_run_command(
+        [
+            f"将 {len(paths)} 个本地文档转换为 Markdown 文档",
+            f"保存位置: {output_dir}",
+            "文档格式会沿用会议纪要 Inbox 模板：基本信息、正文、行业/公司/人工标签占位和已读勾选项。",
+            ".doc 文件需要本机安装 LibreOffice/OpenOffice；Word 中无法由 Markdown 原生表达的格式会尽量用兼容 HTML 片段保留。",
+        ],
+        cmd,
+        PROJECT_ROOT,
+        task_label="本地文档转 Markdown 微程序",
+    )
+
+
+def run_word_doc_to_md():
+    """Backward-compatible wrapper for older internal callers."""
+    run_local_document_to_md()
 
 
 def run_single_source_download_menu():
