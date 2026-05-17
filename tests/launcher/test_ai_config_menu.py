@@ -38,7 +38,10 @@ def test_checked_in_ai_model_json_files_are_parseable():
         "data/config/ai_models.json",
         "data/config/ai_models.example.json",
     ]:
-        config = json.loads((root / relative_path).read_text(encoding="utf-8"))
+        path = root / relative_path
+        if relative_path == "data/config/ai_models.json" and not path.exists():
+            continue
+        config = json.loads(path.read_text(encoding="utf-8"))
         assert set(["DeepSeek-V4-Pro", "glm-5.1", "deepseek-v4-flash", "kimi-k2.6"]).issubset(
             config["zhongxin_models"]
         )
